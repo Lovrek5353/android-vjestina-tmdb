@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Tmdb</string>
+    <string name="favorites">Favorites</string>
+    <string name="whatspopular">What \'s popular</string>
+    <string name="free">Free to watch</string>
+    <string name="trending">Trending</string>
+    <string name="descp">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ut euismod eros. Donec rutrum molestie magna vel efficitur</string>
 </resources>
