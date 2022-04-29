@@ -8,13 +8,12 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.lifecycle.ViewModel
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -22,10 +21,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tmdb.Composables.MovieCard
-import com.example.tmdb.Composables.MovieItemViewState
+import com.example.tmdb.data.MovieItemViewState
 import com.example.tmdb.R
+import com.example.tmdb.data.HomeViewModel
 import com.example.tmdb.ui.theme.Blue
 import com.example.tmdb.ui.theme.Grey
+
 
 
 @Composable
@@ -41,20 +42,29 @@ fun MainMovieList(
         items(MovieItems) {
             MovieCard(
                 item = it,
+                onMovieItemClick = { Router.navigateTo(Screen.Details) },
                 modifier = Modifier
                     .size(
                         width = dimensionResource(id = R.dimen.movie_card_width_main),
                         height = dimensionResource(id = R.dimen.movie_card_height_main)
                     )
-                    .padding(10.dp),
-                onMovieItemClick = { onMovieItemClick(it) })
+                    .padding(10.dp)
+            )
         }
     }
 }
 
 @Composable
-fun MainScreen() {
-    var movies by remember {
+fun MainScreen(
+    //viewModel: HomeViewModel= viewModel
+/*    val homeModule = module{
+        viewModel {
+            HomeViewModel()
+        }
+    }
+*/
+){
+    var MainMovies by remember {
         mutableStateOf(
             listOf(
                 MovieItemViewState(
@@ -81,18 +91,17 @@ fun MainScreen() {
     val scaffoldState: ScaffoldState = rememberScaffoldState()
     Scaffold(
         scaffoldState = scaffoldState,
-        topBar = {
+/*       topBar = {
             TopAppBar(
                 Modifier.background(Blue)
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.tmdb_sign),
+                    painter = painterResource(id = R.drawable.tmdb_sign_3x),
                     contentDescription = "Movie picture",
                     alignment = Alignment.CenterStart,
                     modifier = Modifier
                         .fillMaxWidth()
                         .wrapContentWidth(align = Alignment.CenterHorizontally)
-                        .scale(3F)
                 )
             }
         },
@@ -145,7 +154,7 @@ fun MainScreen() {
                     }
                 }
             }
-        }
+        }*/
 
     ) {
         LazyColumn() {
@@ -184,11 +193,11 @@ fun MainScreen() {
 
             }
             item {
-                if (movies.isNotEmpty()) {
+                if (MainMovies.isNotEmpty()) {
                     MainMovieList(
                         modifier = Modifier,
                         onMovieItemClick = { Router.navigateTo(Screen.Details) },
-                        MovieItems = movies,
+                        MovieItems = MainMovies,
                     )
                 }
             }
@@ -206,11 +215,11 @@ fun MainScreen() {
                 }
             }
             item {
-                if (movies.isNotEmpty()) {
+                if (MainMovies.isNotEmpty()) {
                     MainMovieList(
                         modifier = Modifier,
                         onMovieItemClick = { Router.navigateTo(Screen.Details) },
-                        MovieItems = movies,
+                        MovieItems = MainMovies,
                     )
                 }
             }
@@ -228,16 +237,17 @@ fun MainScreen() {
                 }
             }
             item {
-                if (movies.isNotEmpty()) {
+                if (MainMovies.isNotEmpty()) {
                     MainMovieList(
                         modifier = Modifier,
                         onMovieItemClick = { Router.navigateTo(Screen.Details) },
-                        MovieItems = movies,
+                        MovieItems = MainMovies,
                     )
                 }
             }
         }
     }
+    BackPressHandler(onBackPressed = { Router.navigateTo(Screen.StartScreen) })
 }
 
 

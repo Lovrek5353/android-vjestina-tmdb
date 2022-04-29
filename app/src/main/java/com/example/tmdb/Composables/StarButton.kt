@@ -17,11 +17,14 @@ import com.example.tmdb.R
 @Composable
 fun StarButton(
     modifier: Modifier = Modifier,
+    isSelected: Boolean = false,
+    onClicked: (Boolean) -> Unit = {}
 ) {
     Image(
         painter = painterResource(id = R.drawable.star),
         contentDescription = "Favorite Button",
         modifier = modifier
+            .clickable { onClicked.invoke(!isSelected) }
             .size(dimensionResource(id = R.dimen.heart_button_size))
             .background(Color.LightGray.copy(alpha = 0.8f), CircleShape)
             .padding(dimensionResource(id = R.dimen.small_spacing))

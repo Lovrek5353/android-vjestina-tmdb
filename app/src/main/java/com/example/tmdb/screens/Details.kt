@@ -29,13 +29,21 @@ import com.example.tmdb.ui.theme.Blue
 import com.example.tmdb.ui.theme.Grey
 import com.example.tmdb.screens.BackPressHandler
 import com.example.tmdb.Composables.StarButton
+import com.example.tmdb.data.HomeViewModel
 import com.example.tmdb.ui.theme.Purple200
 
 @Composable
 fun DetailsScreen() {
+/*    val DetailsModule= module{
+        viewModel{
+            DetailsViewModel(
+            TODO
+            )
+        }
+    }*/
     LazyColumn(
         modifier = Modifier
-            .width(dimensionResource(id = R.dimen.movie_card_width_details))
+            .fillMaxSize()
     ) {
         item {
             TopAppBar(
@@ -46,11 +54,10 @@ fun DetailsScreen() {
                     Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back arrow")
                 }
                 Image(
-                    painter = painterResource(id = R.drawable.tmdb_sign),
+                    painter = painterResource(id = R.drawable.tmdb_sign_3x),
                     contentDescription = "Movie picture",
                     alignment = Alignment.CenterStart,
                     modifier = Modifier
-                        .scale(3F)
                         .fillMaxWidth()
                         .wrapContentWidth(align = Alignment.CenterHorizontally)
                 )
@@ -85,7 +92,7 @@ fun DetailsScreen() {
                 }
             }
         }
-        item {
+        item{
             Box(
                 modifier = Modifier
                     .background(Color.White)
@@ -98,7 +105,6 @@ fun DetailsScreen() {
                     Text(text = stringResource(id = R.string.descp))
                     Spacer(modifier = Modifier.height(10.dp))
                     Row() {
-                        ActorsList()
                         ActorsList()
                         ActorsList()
                         ActorsList()
@@ -136,26 +142,22 @@ fun ActorsList() {
 
 @Composable
 fun CrewList() {
-    Card(
-        modifier = Modifier
-            .padding(10.dp)
-            .clip(RoundedCornerShape(10.dp))
-            .width(100.dp)
-    ) {
-        Column {
+        Column (
+            modifier = Modifier
+                .padding(10.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .width(100.dp)
+                ) {
             Image(
                 painter = painterResource(id = R.drawable.r_downey_junior),
                 contentScale = ContentScale.Inside,
                 contentDescription = null,
-                modifier = Modifier
-                    .clip(RoundedCornerShape(10.dp))
             )
             Text(text = "Robert Downey Jr.")
             Spacer(modifier = Modifier.height(2.dp))
             Text(text = "Actor")
         }
     }
-}
 
 @Preview
 @Composable

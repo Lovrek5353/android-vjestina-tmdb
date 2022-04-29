@@ -18,16 +18,18 @@ import com.example.tmdb.R
 import com.example.tmdb.screens.Router
 import com.example.tmdb.screens.Screen
 import com.example.tmdb.ui.theme.FavoriteButton
+import com.example.tmdb.data.MovieItemViewState
 
 @Composable
 fun MovieCard(
     modifier: Modifier = Modifier,
-    onMovieItemClick: (MovieItemViewState) -> Unit = {},
-    item: MovieItemViewState
+    onMovieItemClick: () -> Unit = {},
+    item: MovieItemViewState,
+    onLikeButtonClick: ()->Unit={}
 ) {
     Box(
         modifier = modifier
-            .clickable { Router.navigateTo(Screen.Details) }
+            .clickable { onMovieItemClick() }
             .clip(
                 RoundedCornerShape(dimensionResource(id = R.dimen.heart_position))
             )
@@ -63,13 +65,8 @@ fun MovieCardPreview() {
             title = "Iron Man",
             overview = "Overview",
             imageUrl = "R.drawable.iron_man_1"
-        )
+        ),
+        onMovieItemClick = ({ Router.navigateTo(Screen.Details) })
     )
 }
 
-data class MovieItemViewState(
-    val id: Int,
-    val title: String,
-    val overview: String,
-    val imageUrl: String
-)

@@ -1,13 +1,12 @@
 package com.example.tmdb.screens
 
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -26,7 +25,8 @@ import androidx.compose.ui.unit.dp
 import com.example.tmdb.R
 import com.example.tmdb.ui.theme.Blue
 import com.example.tmdb.Composables.MovieCard
-import com.example.tmdb.Composables.MovieItemViewState
+import com.example.tmdb.data.HomeViewModel
+import com.example.tmdb.data.MovieItemViewState
 
 
 @Composable
@@ -42,7 +42,7 @@ fun MovieList(
         items(MovieItems) {
             MovieCard(
                 item = it,
-                onMovieItemClick = { onMovieItemClick(it) },
+                onMovieItemClick = { Router.navigateTo(Screen.Details) },
                 modifier = Modifier
                     .size(
                         width = dimensionResource(id = R.dimen.movie_card_width_favorite),
@@ -54,9 +54,15 @@ fun MovieList(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun FavoritesScreen() {
-    var movies by remember {
+/*    val FavoritesModule= module{
+        viewModel{
+            HomeViewModel(TODO)
+        }
+    }*/
+    var FavoriteMovies by remember {
         mutableStateOf(
             listOf(
                 MovieItemViewState(
@@ -76,6 +82,12 @@ fun FavoritesScreen() {
                     title = "Iron Man 1",
                     overview = "Overview",
                     imageUrl = "R.drawable.iron_man_1"
+                ),
+                MovieItemViewState(
+                    id = 3,
+                    title = "Iron Man 1",
+                    overview = "Overview",
+                    imageUrl = "R.drawable.iron_man_1"
                 )
             )
         )
@@ -83,18 +95,17 @@ fun FavoritesScreen() {
     val scaffoldStateMain: ScaffoldState = rememberScaffoldState()
     Scaffold(
         scaffoldState = scaffoldStateMain,
-        topBar = {
+/*       topBar = {
             TopAppBar(
                 Modifier.background(Blue)
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.tmdb_sign),
+                    painter = painterResource(id = R.drawable.tmdb_sign_3x),
                     contentDescription = "Movie picture",
                     alignment = Alignment.CenterStart,
                     modifier = Modifier
                         .fillMaxWidth()
                         .wrapContentWidth(align = Alignment.CenterHorizontally)
-                        .scale(3F)
                 )
             }
         },
@@ -154,10 +165,36 @@ fun FavoritesScreen() {
                     }
                 }
             }
-        }
+        }*/
     )
     {
-        LazyColumn(
+        Box(
+            modifier = Modifier
+                .background(Color.White)
+                .fillMaxWidth()
+        ) {
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(text = stringResource(id = R.string.favorites))
+            Spacer(modifier = Modifier.height(10.dp))
+        }
+        LazyVerticalGrid(   //Kako izbrisati ove crte, kada se klikne na njih dobiva se scafford
+            cells = GridCells.Adaptive(dimensionResource(id = R.dimen.movie_card_width_main)),
+
+            content ={
+                items(FavoriteMovies.size){
+                    Box(modifier = Modifier.fillMaxHeight(2f)) {
+                        if (FavoriteMovies.isNotEmpty()) {
+                            MovieList(
+                                modifier = Modifier,
+                                onMovieItemClick = { Router.navigateTo(Screen.Details) },
+                                MovieItems = FavoriteMovies,
+                            )
+                        }
+                    }
+                }
+            }
+        )
+       /* LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
             item {
@@ -182,11 +219,8 @@ fun FavoritesScreen() {
                     }
                 }
             }
-            item {
-                Spacer(modifier = Modifier.fillMaxSize(4f))
-            }
-        }
-        BackPressHandler(onBackPressed = { Router.navigateTo(Screen.HomeScreen) })
+        }*/
+        BackPressHandler(onBackPressed = { Router.navigateTo(Screen.StartScreen) })
     }
 }
 
