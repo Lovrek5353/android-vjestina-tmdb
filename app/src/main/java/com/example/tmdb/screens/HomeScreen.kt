@@ -1,7 +1,5 @@
 package com.example.tmdb.screens
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -10,30 +8,26 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.lifecycle.ViewModel
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tmdb.Composables.MovieCard
-import com.example.tmdb.data.MovieItemViewState
 import com.example.tmdb.R
 import com.example.tmdb.data.HomeViewModel
-import com.example.tmdb.ui.theme.Blue
+import com.example.tmdb.data.MovieItemViewState
 import com.example.tmdb.ui.theme.Grey
-
+import org.koin.androidx.compose.get
 
 
 @Composable
 fun MainMovieList(
     modifier: Modifier = Modifier,
     onMovieItemClick: (MovieItemViewState) -> Unit = {},
-    MovieItems: List<MovieItemViewState>
+    MovieItems: List<MovieItemViewState>,
+    viewModel: HomeViewModel
 ) {
     LazyRow(
         modifier = Modifier.fillMaxWidth(),
@@ -42,7 +36,9 @@ fun MainMovieList(
         items(MovieItems) {
             MovieCard(
                 item = it,
-                onMovieItemClick = { Router.navigateTo(Screen.Details) },
+                onMovieItemClick = { onMovieItemClick(it) },
+                //onLikeButtonClick= TODO(),
+                //onLikeButtonClick= ({ viewModel.movieRepository.addFavoriteMovies(it) }),
                 modifier = Modifier
                     .size(
                         width = dimensionResource(id = R.dimen.movie_card_width_main),
@@ -56,106 +52,19 @@ fun MainMovieList(
 
 @Composable
 fun MainScreen(
-    //viewModel: HomeViewModel= viewModel
-/*    val homeModule = module{
-        viewModel {
-            HomeViewModel()
-        }
-    }
-*/
+    viewModel: HomeViewModel
 ){
-    var MainMovies by remember {
-        mutableStateOf(
-            listOf(
-                MovieItemViewState(
-                    id = 1,
-                    title = "Iron Man 1",
-                    overview = "Overview",
-                    imageUrl = "R.drawable.iron_man_1"
-                ),
-                MovieItemViewState(
-                    id = 2,
-                    title = "Iron Man 1",
-                    overview = "Overview",
-                    imageUrl = "R.drawable.iron_man_1"
-                ),
-                MovieItemViewState(
-                    id = 3,
-                    title = "Iron Man 1",
-                    overview = "Overview",
-                    imageUrl = "R.drawable.iron_man_1"
-                )
-            )
-        )
-    }
+    var popularMovies=viewModel.getPopularMovies().collectAsState(initial = listOf() ).value
+    var nowPlayingMovies=viewModel.getNowPlayingMovies().collectAsState(initial = listOf()).value
+    var upcomingMovies=viewModel.getUpcomingMovies().collectAsState(initial = listOf()).value
+    var topRatedMovies=viewModel.getTopRatedMovies().collectAsState(initial = listOf()).value
+
+
+    //var moviesToShow=MainMovies
+    var movieCategory by remember { mutableStateOf(0)}
     val scaffoldState: ScaffoldState = rememberScaffoldState()
     Scaffold(
         scaffoldState = scaffoldState,
-/*       topBar = {
-            TopAppBar(
-                Modifier.background(Blue)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.tmdb_sign_3x),
-                    contentDescription = "Movie picture",
-                    alignment = Alignment.CenterStart,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentWidth(align = Alignment.CenterHorizontally)
-                )
-            }
-        },
-        bottomBar = {
-            BottomAppBar() {
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    Box(
-                        modifier = Modifier
-                            .alignByBaseline()
-                            .padding(start = 100.dp)
-                    ) {
-                        Column() {
-                            IconButton(
-                                onClick = { Router.navigateTo(Screen.HomeScreen) },
-                                modifier = Modifier.then(Modifier.size(25.dp))
-                            )
-                            {
-                                Icon(
-                                    imageVector = Icons.Default.Home,
-                                    contentDescription = "Home button"
-                                )
-                            }
-                            Text(text = "Home", textAlign = TextAlign.Center)
-                        }
-                    }
-                    Box(
-                        modifier = Modifier
-                            .wrapContentWidth(align = Alignment.CenterHorizontally)
-                            .padding(start = 100.dp)
-                            .fillMaxWidth()
-                    ) {
-                        Column() {
-                            IconButton(
-                                onClick = { Router.navigateTo(Screen.Favorites) },
-                                modifier = Modifier
-                                    .then(Modifier.size(25.dp))
-                                    .fillMaxWidth()
-                            )
-                            {
-                                Icon(
-                                    imageVector = Icons.Default.Favorite,
-                                    contentDescription = "Favorites",
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .wrapContentWidth(align = Alignment.CenterHorizontally)
-                                )
-                            }
-                            Text(text = "Favorites", textAlign = TextAlign.Center)
-                        }
-                    }
-                }
-            }
-        }*/
-
     ) {
         LazyColumn() {
             item {
@@ -172,32 +81,34 @@ fun MainScreen(
                     }
                 }
             }
+            // za kategorije filmova https://medium.com/rocknnull/jetpack-compose-tabs-with-swiping-7efc6ccfa44
             item {
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(text = stringResource(id = R.string.whatspopular))
                 Spacer(modifier = Modifier.height(5.dp))
                 Row() {
-                    TextButton(onClick = { /*TODO*/ }) {
-                        Text(text = "Streaming")
+                    TextButton(onClick = {movieCategory=1}) {
+                        Text(text = "Popular")
                     }
-                    TextButton(onClick = { /*TODO*/ }) {
-                        Text(text = "On TV")
-                    }
-                    TextButton(onClick = { /*TODO*/ }) {
-                        Text(text = "For Rent")
-                    }
-                    TextButton(onClick = { /*TODO*/ }) {
-                        Text(text = "In theaters")
+                    TextButton(onClick = { movieCategory=2 }) {
+                        Text(text = "Top rated")
                     }
                 }
+            }
+            //var moviesToShow: MutableList<MovieItemViewState> = mutableListOf()
 
+            var moviesToShow=popularMovies
+          when(movieCategory){
+               1->moviesToShow=popularMovies
+                2->moviesToShow=topRatedMovies
             }
             item {
-                if (MainMovies.isNotEmpty()) {
+                if (moviesToShow.isNotEmpty()) {
                     MainMovieList(
                         modifier = Modifier,
-                        onMovieItemClick = { Router.navigateTo(Screen.Details) },
-                        MovieItems = MainMovies,
+                        onMovieItemClick = { Router.navigateTo(Screen.Details(it.id)) },
+                        MovieItems = moviesToShow,
+                        viewModel = HomeViewModel(get())
                     )
                 }
             }
@@ -205,21 +116,16 @@ fun MainScreen(
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(text = stringResource(id = R.string.free))
                 Spacer(modifier = Modifier.height(5.dp))
-                Row() {
-                    TextButton(onClick = { /*TODO*/ }) {
-                        Text(text = "Movies")
-                    }
-                    TextButton(onClick = { /*TODO*/ }) {
-                        Text(text = "TV")
-                    }
-                }
             }
+
+            var upcomingMovies=upcomingMovies
             item {
-                if (MainMovies.isNotEmpty()) {
+                if (upcomingMovies.isNotEmpty()) {
                     MainMovieList(
                         modifier = Modifier,
-                        onMovieItemClick = { Router.navigateTo(Screen.Details) },
-                        MovieItems = MainMovies,
+                        onMovieItemClick = { Router.navigateTo(Screen.Details(it.id)) },
+                        MovieItems = upcomingMovies,
+                        viewModel = HomeViewModel(get())
                     )
                 }
             }
@@ -227,32 +133,27 @@ fun MainScreen(
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(text = stringResource(id = R.string.trending))
                 Spacer(modifier = Modifier.height(5.dp))
-                Row() {
-                    TextButton(onClick = { /*TODO*/ }) {
-                        Text(text = "Movies")
-                    }
-                    TextButton(onClick = { /*TODO*/ }) {
-                        Text(text = "TV")
-                    }
-                }
+
             }
+            var upcomingToWatch=popularMovies
             item {
-                if (MainMovies.isNotEmpty()) {
+                if (upcomingToWatch.isNotEmpty()) {
                     MainMovieList(
                         modifier = Modifier,
-                        onMovieItemClick = { Router.navigateTo(Screen.Details) },
-                        MovieItems = MainMovies,
+                        onMovieItemClick = { Router.navigateTo(Screen.Details(it.id)) },
+                        MovieItems = upcomingToWatch,
+                        viewModel = HomeViewModel(get())
                     )
                 }
             }
         }
     }
-    BackPressHandler(onBackPressed = { Router.navigateTo(Screen.StartScreen) })
+    BackPressHandler(onBackPressed = { Router.navigateTo(Screen.StartScreen(StartScreenTab.HomeTab)) })
 }
 
 
 @Preview
 @Composable
 fun MainScreenPreview() {
-    MainScreen()
+    MainScreen(HomeViewModel(get()))
 }

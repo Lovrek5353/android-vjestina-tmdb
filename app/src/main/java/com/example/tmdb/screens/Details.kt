@@ -1,6 +1,6 @@
 package com.example.tmdb.screens
 
-import android.widget.Space
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -11,36 +11,28 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle.Companion.values
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
+import com.example.tmdb.Composables.StarButton
 import com.example.tmdb.R
+import com.example.tmdb.data.DetailsViewModel
+import com.example.tmdb.data.movieDetails.castMember
+import com.example.tmdb.data.movieDetails.crewMember
 import com.example.tmdb.ui.theme.Blue
 import com.example.tmdb.ui.theme.Grey
-import com.example.tmdb.screens.BackPressHandler
-import com.example.tmdb.Composables.StarButton
-import com.example.tmdb.data.HomeViewModel
-import com.example.tmdb.ui.theme.Purple200
 
 @Composable
-fun DetailsScreen() {
-/*    val DetailsModule= module{
-        viewModel{
-            DetailsViewModel(
-            TODO
-            )
-        }
-    }*/
+fun DetailsScreen(viewModel: DetailsViewModel, movieId: Int?) {
+    val details= viewModel.movieDetailsFlow.collectAsState().value
+    val credits=viewModel.movieCreditsFlow.collectAsState().value
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -49,7 +41,7 @@ fun DetailsScreen() {
             TopAppBar(
                 modifier = Modifier.background(Blue)
             ) {
-                IconButton(onClick = { Router.navigateTo(Screen.HomeScreen) })
+                IconButton(onClick = { Router.navigateTo(Screen.StartScreen(StartScreenTab.HomeTab)) })
                 {
                     Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back arrow")
                 }
@@ -72,7 +64,7 @@ fun DetailsScreen() {
             )
             {
                 Image(
-                    painter = painterResource(id = R.drawable.iron_man_1),
+                    painter = rememberAsyncImagePainter(model = "https://image.tmdb.org/t/p/w500/${details.posterPath}"),
                     contentDescription = "Movie picture",
                     contentScale = ContentScale.FillBounds,
                     modifier = Modifier
@@ -80,13 +72,14 @@ fun DetailsScreen() {
                 )
                 Column {
                     Spacer(modifier = Modifier.height(100.dp))
-                    CircularProgressIndicator(progress = 0.75f)
+                    CircularProgressIndicator(progress = details.score*10f)
                     Spacer(modifier = Modifier.height(10.dp))
-                    Text(text = "Iron Man (2008)", color = Color.White)
+                    Text(text = details.originalTitle, color = Color.White)
                     Spacer(modifier = Modifier.height(10.dp))
-                    Text(text = "05/02/2008(US)", color = Color.White)
+                    Text(text = details.releaseDate, color = Color.White)
                     Spacer(modifier = Modifier.height(10.dp))
-                    Text(text = "Action, Science Fiction, Adventure  2h 6m", color = Color.White)
+                    Text(text = "${details.genres.joinToString { it.name }} ${details.runtime}", color = Color.White)
+                    //Text(text = "Action, Science Fiction, Adventure  2h 6m", color = Color.White)
                     Spacer(modifier = Modifier.height(10.dp))
                     StarButton()
                 }
@@ -102,66 +95,60 @@ fun DetailsScreen() {
                     Spacer(modifier = Modifier.height(10.dp))
                     Text(text = "Overview")
                     Spacer(modifier = Modifier.height(10.dp))
-                    Text(text = stringResource(id = R.string.descp))
-                    Spacer(modifier = Modifier.height(10.dp))
-                    Row() {
-                        ActorsList()
-                        ActorsList()
-                        ActorsList()
-                    }
+                    Text(text = details.overview)
                     Spacer(modifier = Modifier.height(10.dp))
                     LazyRow() {
-                        item {
-                            CrewList()
+                        for(crewMember in credits.crew){
+                            ActorsList(crewMember = crewMember)
                         }
-                        item {
-                            CrewList()
-                        }
-                        item {
-                            CrewList()
-                        }
-                        item {
-                            CrewList()
+                    }
+                    Spacer(modifier = Modifier.height(10.dp))
+                    LazyRow(){
+                        items(credits.cast.size){
+                            for(castMember in credits.cast){
+                                CrewList(castMember)
+                            }
                         }
                     }
                 }
             }
         }
     }
-    BackPressHandler(onBackPressed = { Router.navigateTo(Screen.HomeScreen) })
+    BackPressHandler(onBackPressed = { Router.navigateTo(Screen.StartScreen(StartScreenTab.HomeTab)) })
 }
 
 @Composable
-fun ActorsList() {
+fun ActorsList(crewMember: crewMember) {
     Column(modifier = Modifier.padding(15.dp)) {
-        Text(text = "John Doe")
+        Text(text =crewMember.name )
         Spacer(modifier = Modifier.height(5.dp))
-        Text(text = "Actor")
+        Text(text = crewMember.job)
     }
 }
 
 @Composable
-fun CrewList() {
+fun CrewList(castMember: castMember) {
         Column (
             modifier = Modifier
                 .padding(10.dp)
                 .clip(RoundedCornerShape(10.dp))
                 .width(100.dp)
                 ) {
+            Log.d("debug", castMember.profilePath.toString())
             Image(
-                painter = painterResource(id = R.drawable.r_downey_junior),
+                painter = rememberAsyncImagePainter(model = "https://image.tmdb.org/t/p/w500/${castMember.profilePath}"),
                 contentScale = ContentScale.Inside,
                 contentDescription = null,
             )
-            Text(text = "Robert Downey Jr.")
+            Text(text = castMember.name)
             Spacer(modifier = Modifier.height(2.dp))
-            Text(text = "Actor")
+            Text(text = castMember.characterName)
         }
     }
 
-@Preview
+/*@Preview
 @Composable
 fun DetailsScreenPreview() {
-    DetailsScreen()
-}
+    DetailsScreen(DetailsViewModel(get()))
+}*/
 

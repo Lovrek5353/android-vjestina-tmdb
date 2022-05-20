@@ -11,16 +11,17 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.tmdb.R
+import com.example.tmdb.data.FavoritesViewModel
+import com.example.tmdb.data.HomeViewModel
 import com.example.tmdb.ui.theme.Blue
+import org.koin.androidx.compose.get
 
 @Composable
-fun StartScreen(){
+fun StartScreen(mainScreenTab: StartScreenTab){
     val scaffoldState: ScaffoldState = rememberScaffoldState()
     Scaffold(
         scaffoldState = scaffoldState,
@@ -48,7 +49,7 @@ fun StartScreen(){
                     ) {
                         Column() {
                             IconButton(
-                                onClick = { Router.navigateTo(Screen.HomeScreen) },
+                                onClick = { Router.navigateTo(Screen.StartScreen(StartScreenTab.HomeTab)) },
                                 modifier = Modifier.then(Modifier.size(25.dp))
                             )
                             {
@@ -68,7 +69,7 @@ fun StartScreen(){
                     ) {
                         Column() {
                             IconButton(
-                                onClick = {Router.navigateTo(Screen.Favorites) },
+                                onClick = {Router.navigateTo(Screen.StartScreen(StartScreenTab.FavoriteTab)) },
                                 modifier = Modifier
                                     .then(Modifier.size(25.dp))
                                     .fillMaxWidth()
@@ -88,14 +89,22 @@ fun StartScreen(){
                 }
             }
         },
-        content = {
-            MainScreen()
+/*        content = {
+            MainScreen(HomeViewModel(get()))
+        }*/
+
+    ){
+        if (mainScreenTab == StartScreenTab.HomeTab) {
+            MainScreen(viewModel = HomeViewModel(get()))
+        } else {
+            FavoritesScreen(viewModel = FavoritesViewModel(get()))
         }
-    )
+    }
 }
 
+/*
 @Preview
 @Composable
 fun StartScreenPreview(){
-    StartScreen()
-}
+    StartScreen(mainScreenTab = tab)
+}*/
