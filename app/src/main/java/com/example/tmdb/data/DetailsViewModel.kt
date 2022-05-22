@@ -2,8 +2,8 @@ package com.example.tmdb.data
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.tmdb.data.movieDetails.MovieDetails
-import com.example.tmdb.data.movieDetails.movieCredits
+import com.example.tmdb.data.MovieDetails.Credits
+import com.example.tmdb.data.MovieDetails.Details
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import org.koin.core.component.KoinComponent
@@ -17,13 +17,13 @@ class DetailsViewModel(var movieRespository: MovieRepository, movieId: Int): Vie
         .stateIn(
         viewModelScope,
         SharingStarted.Eagerly,
-        MovieDetails()
+        Details()
     )
     val movieCreditsFlow= movieCredit
         .stateIn(
             viewModelScope,
             SharingStarted.Eagerly,
-            movieCredits()
+            Credits()
         )
 }
 

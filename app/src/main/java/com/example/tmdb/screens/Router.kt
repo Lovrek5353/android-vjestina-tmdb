@@ -7,8 +7,6 @@ import androidx.compose.runtime.setValue
 sealed class Screen() {
     data class StartScreen(val tab: StartScreenTab) : Screen()
     data class Details(val movieId: Int): Screen()
-    //object StartScreen : Screen()
-    //object Details : Screen()
     object Favorites : Screen()
     object HomeScreen : Screen()
 }
@@ -22,8 +20,6 @@ object Router {
     var currentScreen: Screen by mutableStateOf(Screen.StartScreen(StartScreenTab.HomeTab))
     var lastHomeTab: StartScreenTab = (currentScreen as Screen.StartScreen).tab
     fun navigateTo(destination: Screen) {
-//        lastHomeTab= (currentScreen as Screen.StartScreen).tab
-//        currentScreen = destination
         when (destination) {
 
             is Screen.StartScreen -> {

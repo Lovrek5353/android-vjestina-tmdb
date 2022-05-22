@@ -1,4 +1,4 @@
-package com.example.tmdb.data.movieDetails
+package com.example.tmdb.data.MovieDetails
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -6,9 +6,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CreditsResponse(
     @SerialName("id")
-    val id: Int,
+    var id: Int,
     @SerialName("cast")
-    val cast: List<castMemberResponse>,
+    val cast: List<ResponseCastMember>,
     @SerialName("crew")
-    val crew: List<crewMemberResponse>
+    val crew: List<ResponseCrewMember>
 )
+
+

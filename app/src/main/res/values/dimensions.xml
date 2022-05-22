@@ -10,4 +10,6 @@
     <dimen name="movie_card_height_details">300dp</dimen>
     <dimen name="movie_card_width_favorite">105dp</dimen>
     <dimen name="movie_card_height_favorite">155dp</dimen>
+    <dimen name="cast_card_width">125dp</dimen>
+    <dimen name="cast_card_height">170dp</dimen>
 </resources>

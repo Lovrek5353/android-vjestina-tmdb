@@ -1,12 +1,14 @@
-package com.example.tmdb.data.movieDetails
+package com.example.tmdb.data.MovieDetails
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class movieGenre(
+data class ResponseCrewMember(
     @SerialName("id")
     val id: Int,
     @SerialName("name")
-    val name: String
+    val name: String,
+    @SerialName("job")
+    val job: String,
 )

@@ -1,4 +1,4 @@
-package com.example.tmdb.data.movieDetails
+package com.example.tmdb.data.MovieDetails
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -18,7 +18,7 @@ data class DetailsResponse(
     @SerialName("original_title")
     val originalTitle: String,
     @SerialName("genres")
-    val genres: List<movieGenre>,
+    val genres: List<MovieGenre>,
     @SerialName("overview")
     val overview: String,
     @SerialName("vote_average")

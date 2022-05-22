@@ -1,7 +1,6 @@
 package com.example.tmdb
 
-//import org.koin.core.context.GlobalContext.startKoin
-//import org.koin.android.ext.android.startKoin
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -32,10 +31,6 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
                     when(currentScreen){
-/*                         Screen.HomeScreen -> MainScreen(HomeViewModel(get()))
-                        Screen.Favorites -> FavoritesScreen(FavoritesViewModel(get()))
-                        Screen.Details -> DetailsScreen(DetailsViewModel(get()))
-                        Screen.StartScreen(StartScreenTab.HomeTab) -> StartScreen()*/
 
                         is Screen.StartScreen -> {
                             val tab: StartScreenTab = (currentScreen as Screen.StartScreen).tab
@@ -43,7 +38,6 @@ class MainActivity : ComponentActivity() {
                         }
                         is Screen.Details -> {
                             val movieId: Int = (currentScreen as Screen.Details).movieId
-                            //val movieData: MovieItemViewState = (currentScreen as Screen.Details).movie
                             DetailsScreen(movieId=movieId , viewModel = (DetailsViewModel(movieRespository = get(), movieId = movieId)))
                         }
                     }

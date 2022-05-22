@@ -1,10 +1,10 @@
-package com.example.tmdb.data.movieDetails
+package com.example.tmdb.data.MovieDetails
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class castMemberResponse(
+data class ResponseCastMember(
     @SerialName("id")
     val id: Int,
     @SerialName("name")

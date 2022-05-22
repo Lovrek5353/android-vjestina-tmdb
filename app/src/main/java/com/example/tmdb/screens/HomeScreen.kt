@@ -37,8 +37,6 @@ fun MainMovieList(
             MovieCard(
                 item = it,
                 onMovieItemClick = { onMovieItemClick(it) },
-                //onLikeButtonClick= TODO(),
-                //onLikeButtonClick= ({ viewModel.movieRepository.addFavoriteMovies(it) }),
                 modifier = Modifier
                     .size(
                         width = dimensionResource(id = R.dimen.movie_card_width_main),
@@ -81,7 +79,6 @@ fun MainScreen(
                     }
                 }
             }
-            // za kategorije filmova https://medium.com/rocknnull/jetpack-compose-tabs-with-swiping-7efc6ccfa44
             item {
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(text = stringResource(id = R.string.whatspopular))

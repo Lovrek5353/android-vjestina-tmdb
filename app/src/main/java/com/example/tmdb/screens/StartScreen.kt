@@ -1,6 +1,5 @@
 package com.example.tmdb.screens
-//Svi komentari su razrijeseni osim uredivanja
-//Pitaj vezano za FlowRow i StartScreen
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -21,7 +20,7 @@ import com.example.tmdb.ui.theme.Blue
 import org.koin.androidx.compose.get
 
 @Composable
-fun StartScreen(mainScreenTab: StartScreenTab){
+fun StartScreen(mainScreenTab: StartScreenTab) {
     val scaffoldState: ScaffoldState = rememberScaffoldState()
     Scaffold(
         scaffoldState = scaffoldState,
@@ -32,7 +31,7 @@ fun StartScreen(mainScreenTab: StartScreenTab){
                 Image(
                     painter = painterResource(id = R.drawable.tmdb_sign_3x),
                     contentDescription = "Movie picture",
-                    alignment = Alignment.CenterStart,
+                    //alignment = Alignment.CenterStart,
                     modifier = Modifier
                         .fillMaxWidth()
                         .wrapContentWidth(align = Alignment.CenterHorizontally)
@@ -69,7 +68,7 @@ fun StartScreen(mainScreenTab: StartScreenTab){
                     ) {
                         Column() {
                             IconButton(
-                                onClick = {Router.navigateTo(Screen.StartScreen(StartScreenTab.FavoriteTab)) },
+                                onClick = { Router.navigateTo(Screen.StartScreen(StartScreenTab.FavoriteTab)) },
                                 modifier = Modifier
                                     .then(Modifier.size(25.dp))
                                     .fillMaxWidth()
@@ -89,11 +88,7 @@ fun StartScreen(mainScreenTab: StartScreenTab){
                 }
             }
         },
-/*        content = {
-            MainScreen(HomeViewModel(get()))
-        }*/
-
-    ){
+    ) {
         if (mainScreenTab == StartScreenTab.HomeTab) {
             MainScreen(viewModel = HomeViewModel(get()))
         } else {

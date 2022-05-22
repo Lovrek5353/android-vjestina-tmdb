@@ -13,6 +13,5 @@ fun MovieResponse.toMovieItemViewState(isFavorite: Boolean)=MovieItemViewState(
     title,
     overview,
     poster_path,
-    //poster_path.let{"$HTTPRoutes.baseURL/$it"},
     isFavorite
 )

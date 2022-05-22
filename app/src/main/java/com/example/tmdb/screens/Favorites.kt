@@ -76,9 +76,9 @@ fun FavoritesScreen(viewModel: FavoritesViewModel) {
             contentPadding = PaddingValues(20.dp),
             content ={
                 items(FavoriteMovies){ item->
-                    Box(modifier = Modifier.fillMaxHeight(2f))
                             MovieCard(
-                                modifier = Modifier.padding(5.dp),
+                                modifier = Modifier
+                                    .padding(5.dp),
                                 item=item,
                                 onMovieItemClick = ({ Router.navigateTo(Screen.Details(item.id)) }),
                             )

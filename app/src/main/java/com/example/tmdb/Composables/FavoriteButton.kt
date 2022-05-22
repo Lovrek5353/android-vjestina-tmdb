@@ -16,10 +16,9 @@ import org.koin.androidx.compose.getViewModel
 fun FavoriteButton(
     modifier: Modifier = Modifier,
     movie: MovieItemViewState,
-    //isSelected: Boolean = false,
 
 ) {
-    var homeViewModel= getViewModel<HomeViewModel>()
+    var homeViewModel = getViewModel<HomeViewModel>()
     var isFavorite by remember {
         mutableStateOf(movie.isFavorite)
     }
@@ -28,10 +27,9 @@ fun FavoriteButton(
         onCheckedChange = {
             isFavorite = !isFavorite
             movie.isFavorite = !movie.isFavorite
-            if(isFavorite){
+            if (isFavorite) {
                 homeViewModel.addToFavorite(movie)
-            }
-            else{
+            } else {
                 homeViewModel.removeFromFavorite(movie)
             }
         }
@@ -42,30 +40,19 @@ fun FavoriteButton(
             contentDescription = "Favorite Button",
         )
     }
-/*   Image(
-        painter = painterResource(id = if (isSelected) R.drawable.favorite else R.drawable.notfavorite),
-        contentDescription = "Favorite Button",
-        modifier = modifier
-            .clickable { onClicked.invoke(movie, !movie.isFavorite) }
-            .size(dimensionResource(id = R.dimen.heart_button_size))
-            .background(Color.Black.copy(alpha = 0.6f), CircleShape)
-            .padding(dimensionResource(id = R.dimen.small_spacing))
-    )*/
-
 }
-
 
 
 @Preview(showBackground = true)
 @Composable
 fun FavoriteButtonPreview() {
     FavoriteButton(
-        movie= MovieItemViewState(
+        movie = MovieItemViewState(
             id = 1,
             title = "Iron Man",
             overview = "Overview",
             poster_path = HTTPRoutes.baseImageUrl,
-            isFavorite=false,
+            isFavorite = false,
         ),
     )
 }

@@ -1,15 +1,16 @@
-package com.example.tmdb.data.movieDetails
+package com.example.tmdb.data.MovieDetails
 
-data class castMember(
+data class CastMember(
     val id: Int,
     val name: String,
     val characterName: String,
     val profilePath: String?,
 )
 
-fun castMemberResponse.tocastMember() = castMember(
+fun ResponseCastMember.toCastMember()= CastMember(
     id,
     name,
     characterName,
     profilePath
 )
+
