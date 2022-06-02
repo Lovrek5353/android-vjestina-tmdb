@@ -7,19 +7,19 @@ import io.ktor.client.features.json.*
 import io.ktor.client.features.json.serializer.*
 import io.ktor.client.features.logging.*
 
-object KtorClient{
-    val httpClient: HttpClient= HttpClient(Android){
-        install(Logging){
-            logger= object: Logger{
-                override fun log(message: String){
+object KtorClient {
+    val httpClient: HttpClient = HttpClient(Android) {
+        install(Logging) {
+            logger = object : Logger {
+                override fun log(message: String) {
                     Log.d("HTTP", message)
                 }
             }
-            level= LogLevel.ALL
+            level = LogLevel.ALL
         }
-        install(JsonFeature){
-            serializer=KotlinxSerializer(kotlinx.serialization.json.Json {
-                ignoreUnknownKeys=true
+        install(JsonFeature) {
+            serializer = KotlinxSerializer(kotlinx.serialization.json.Json {
+                ignoreUnknownKeys = true
             })
         }
     }

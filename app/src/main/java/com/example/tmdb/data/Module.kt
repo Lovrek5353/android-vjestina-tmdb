@@ -1,8 +1,11 @@
 package com.example.tmdb.data
 
 
-
+import androidx.room.Room
+import com.example.tmdb.database.AppDatabase
+import com.example.tmdb.database.MovieDao
 import com.example.tmdb.network.KtorClient
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -10,41 +13,41 @@ val httpClientModule = module {
     single { KtorClient.httpClient }
 }
 
-val FavoritesModule= module{
+val FavoritesModule = module {
     viewModel { params ->
         FavoritesViewModel(movieRespository = get())
     }
 }
-val homeModule = module{
+val homeModule = module {
     viewModel {
         HomeViewModel(movieRepository = get())
     }
 }
 
-val DetailsModule= module{
-    viewModel{ params ->
-        DetailsViewModel(get(), movieId = params.get() )
+val DetailsModule = module {
+    viewModel { params ->
+        DetailsViewModel(get(), movieId = params.get())
     }
 }
-
-val favoriteDatabaseModule= module{
-    single<FavoriteMoviesDatabase>{
-        FavoriteMoviesDatabase()
-    }
+val repositoryModule = module {
+    single { MovieRepositoryImpl(get(), get()) }
+    single<MovieRepository> { MovieRepositoryImpl(get(), get()) }
 }
 
-val repositoryModule= module{
-    single<MovieRepository>{
-        MovieRepositoryImpl(
-            movieApi = get<MovieApi>(),
-            favoriteDatabase = get<FavoriteMoviesDatabase>()
-        )
-
-    }
-}
-
-val apiModule= module {
-    single<MovieApi>{
+val apiModule = module {
+    single<MovieApi> {
         MovieApiImpl(get())
+    }
+}
+val databaseModule = module {
+    single {
+        Room.databaseBuilder(
+            androidContext(),
+            AppDatabase::class.java, "Movie-database"
+        ).build()
+    }
+    single<MovieDao> {
+        val database = get<AppDatabase>()
+        database.movieDao()
     }
 }

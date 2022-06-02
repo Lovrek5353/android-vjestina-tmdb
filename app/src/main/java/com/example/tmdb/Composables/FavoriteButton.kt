@@ -17,7 +17,7 @@ fun FavoriteButton(
     modifier: Modifier = Modifier,
     movie: MovieItemViewState,
 
-) {
+    ) {
     var homeViewModel = getViewModel<HomeViewModel>()
     var isFavorite by remember {
         mutableStateOf(movie.isFavorite)
@@ -28,9 +28,9 @@ fun FavoriteButton(
             isFavorite = !isFavorite
             movie.isFavorite = !movie.isFavorite
             if (isFavorite) {
-                homeViewModel.addToFavorite(movie)
+                homeViewModel.addToFavorite(movie.id)
             } else {
-                homeViewModel.removeFromFavorite(movie)
+                homeViewModel.removeFromFavorite(movie.id)
             }
         }
     )

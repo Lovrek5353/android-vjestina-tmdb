@@ -6,9 +6,8 @@ import com.example.tmdb.data.MovieDetails.Credits
 import com.example.tmdb.data.MovieDetails.Details
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
-import org.koin.core.component.KoinComponent
 
-class DetailsViewModel(var movieRespository: MovieRepository, movieId: Int): ViewModel(), KoinComponent {
+class DetailsViewModel(var movieRespository: MovieRepository, movieId: Int): ViewModel() {
 
     private val movieDetail= movieRespository.getMovieDetails(movieId= movieId)
     private val movieCredit=movieRespository.getMovieCredits(movieId= movieId)

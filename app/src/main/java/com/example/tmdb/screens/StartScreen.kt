@@ -31,7 +31,6 @@ fun StartScreen(mainScreenTab: StartScreenTab) {
                 Image(
                     painter = painterResource(id = R.drawable.tmdb_sign_3x),
                     contentDescription = "Movie picture",
-                    //alignment = Alignment.CenterStart,
                     modifier = Modifier
                         .fillMaxWidth()
                         .wrapContentWidth(align = Alignment.CenterHorizontally)

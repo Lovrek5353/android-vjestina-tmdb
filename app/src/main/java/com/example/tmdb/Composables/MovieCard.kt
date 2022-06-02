@@ -54,19 +54,3 @@ fun MovieCard(
 }
 
 
-/*@Preview
-@Composable
-fun MovieCardPreview() {
-    MovieCard(
-        modifier = Modifier,
-        item = MovieItemViewState(
-            id = 1,
-            title = "Iron Man",
-            overview = "Overview",
-            poster_path = HTTPRoutes.baseImageUrl,
-            isFavorite=false
-        ),
-        onMovieItemClick = ({ Router.navigateTo(Screen.DetailsScreen(item)) }),
-    )
-}*/
-

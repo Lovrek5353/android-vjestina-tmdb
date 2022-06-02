@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 
 sealed class Screen() {
     data class StartScreen(val tab: StartScreenTab) : Screen()
-    data class Details(val movieId: Int): Screen()
+    data class Details(val movieId: Int) : Screen()
     object Favorites : Screen()
     object HomeScreen : Screen()
 }

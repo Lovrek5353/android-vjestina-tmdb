@@ -1,9 +1,10 @@
 package com.example.tmdb.data
 
-import com.example.tmdb.data.MovieDetails.Credits
-import com.example.tmdb.data.MovieDetails.Details
-import com.example.tmdb.data.MovieDetails.toMovieCredits
-import com.example.tmdb.data.MovieDetails.toMovieDetails
+import com.example.tmdb.data.MovieDetails.*
+import com.example.tmdb.database.MovieActorCrossRef
+import com.example.tmdb.database.MovieCrewCrossRef
+import com.example.tmdb.database.MovieDao
+import com.example.tmdb.database.MovieGenreCrossRef
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -14,17 +15,17 @@ interface MovieRepository {
     fun loadNowPlayingMovies(): SharedFlow<List<MovieItemViewState>>
     fun loadUpcomingMovies(): SharedFlow<List<MovieItemViewState>>
     fun loadTopRatedMovies(): SharedFlow<List<MovieItemViewState>>
-    fun loadFavoriteMovies(): SharedFlow<MutableList<MovieItemViewState>>
-    fun addFavoriteMovies(movie: MovieItemViewState)
-    fun removeFavoriteMovies(movie: MovieItemViewState)
+    fun loadFavoriteMovies(): SharedFlow<List<MovieItemViewState>>
+    fun removeFavoriteMovies(movieId: Int)
     fun getMovieDetails(movieId: Int): Flow<Details>
     fun getMovieCredits(movieId: Int): Flow<Credits>
-
+    fun addToFavorite(movieDetails: Details, movieCredits: Credits)
+    fun getMovieFormDatabase(movieId: Int): Flow<Details>
 }
 
 internal class MovieRepositoryImpl(
     private val movieApi: MovieApi,
-    private val favoriteDatabase: FavoriteMoviesDatabase
+    private val movieDao: MovieDao,
 ) : MovieRepository {
 
     private val flowScope = CoroutineScope(Dispatchers.Default)
@@ -65,12 +66,15 @@ internal class MovieRepositoryImpl(
                 SharingStarted.WhileSubscribed(),
                 replay = 1
             )
-    private val favoriteMoviesInitialFlow = flow { emit(favoriteDatabase.fetchFavoriteMovies()) }
-        .shareIn(
-            flowScope,
-            SharingStarted.WhileSubscribed(),
-            replay = 1
-        )
+    private val favoriteMoviesInitialFlow =
+        flow {
+            emit(movieDao.getFavouriteMovies().map { it.toMovieItemViewState() })
+        }
+            .shareIn(
+                flowScope,
+                SharingStarted.WhileSubscribed(),
+                replay = 1
+            )
 
 
     private val popularMovies = merge(
@@ -126,14 +130,10 @@ internal class MovieRepositoryImpl(
     override fun loadNowPlayingMovies(): SharedFlow<List<MovieItemViewState>> = nowPlayingMovies
     override fun loadUpcomingMovies(): SharedFlow<List<MovieItemViewState>> = upcomingMovies
     override fun loadTopRatedMovies(): SharedFlow<List<MovieItemViewState>> = topRatedMovies
-    override fun loadFavoriteMovies(): SharedFlow<MutableList<MovieItemViewState>> = favoriteMovies
+    override fun loadFavoriteMovies(): SharedFlow<List<MovieItemViewState>> = favoriteMovies
 
-    override fun addFavoriteMovies(movie: MovieItemViewState) {
-        favoriteDatabase.addFavoriteMovie(movie)
-    }
-
-    override fun removeFavoriteMovies(movie: MovieItemViewState) {
-        favoriteDatabase.deleteFavoriteMovie(movie)
+    override fun removeFavoriteMovies(movieId: Int) {
+        movieDao.removeMovie(movieId)
     }
 
     override fun getMovieCredits(movieId: Int): Flow<Credits> = flow {
@@ -142,6 +142,46 @@ internal class MovieRepositoryImpl(
 
     override fun getMovieDetails(movieId: Int): Flow<Details> = flow {
         emit(movieApi.fetchMovieDetails(movieId).toMovieDetails())
+    }
+
+    override fun addToFavorite(movieDetails: Details, movieCredits: Credits) {
+        val movieId = movieDetails.id
+        val genre = movieDetails.genres
+        val cast = movieCredits.cast
+        val crew = movieCredits.crew
+
+        movieDao.insertMovie(movieDetails.toMovieEntity())
+        cast.forEach {
+            movieDao.insertCastMember(it.toActorEntity())
+            movieDao.insertMovieActorCrossRef(
+                MovieActorCrossRef(
+                    movieId,
+                    it.id
+                )
+            )
+        }
+        crew.forEach {
+            movieDao.insertCrewMember(it.toCrewEntity())
+            movieDao.insertMovieCrewCrossRef(
+                MovieCrewCrossRef(
+                    movieId,
+                    it.id
+                )
+            )
+        }
+        genre.forEach {
+            movieDao.insertGenre(it.toGenreEntity())
+            movieDao.insertGenreCrossRef(
+                MovieGenreCrossRef(
+                    movieId,
+                    it.id
+                )
+            )
+        }
+    }
+
+    override fun getMovieFormDatabase(movieId: Int): Flow<Details> {
+        return movieDao.getMovieDetails(movieId).map { it.toDetails() }
     }
 
 
