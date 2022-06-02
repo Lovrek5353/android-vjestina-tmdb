@@ -29,16 +29,9 @@ val DetailsModule = module {
         DetailsViewModel(get(), movieId = params.get())
     }
 }
-
-val favoriteDatabaseModule = module {
-    single<FavoriteMoviesDatabase> {
-        FavoriteMoviesDatabase()
-    }
-}
-
 val repositoryModule = module {
-    single { MovieRepositoryImpl(get(), get(), get()) }
-    single<MovieRepository> { MovieRepositoryImpl(get(), get(), get()) }
+    single { MovieRepositoryImpl(get(), get()) }
+    single<MovieRepository> { MovieRepositoryImpl(get(), get()) }
 }
 
 val apiModule = module {

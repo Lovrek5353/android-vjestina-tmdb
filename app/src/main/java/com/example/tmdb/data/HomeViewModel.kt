@@ -8,11 +8,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
-import org.koin.core.component.KoinComponent
 
 class HomeViewModel(
     var movieRepository: MovieRepository,
-) : ViewModel(), KoinComponent {
+) : ViewModel() {
     fun getPopularMovies(): SharedFlow<List<MovieItemViewState>> {
         return movieRepository.loadPopularMovies()
     }

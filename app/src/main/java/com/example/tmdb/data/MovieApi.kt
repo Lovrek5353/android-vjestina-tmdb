@@ -7,7 +7,7 @@ import com.example.tmdb.network.HTTPRoutes
 import io.ktor.client.*
 import io.ktor.client.request.*
 
-//komunikacijasa REST API-jem
+
 interface MovieApi {
 
     suspend fun fetchPopularMovies(): MovieResponseList

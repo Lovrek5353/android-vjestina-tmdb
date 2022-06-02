@@ -26,7 +26,6 @@ interface MovieRepository {
 internal class MovieRepositoryImpl(
     private val movieApi: MovieApi,
     private val movieDao: MovieDao,
-    private val favoriteDatabase: FavoriteMoviesDatabase
 ) : MovieRepository {
 
     private val flowScope = CoroutineScope(Dispatchers.Default)
