@@ -5,8 +5,8 @@ import kotlinx.coroutines.flow.SharedFlow
 import org.koin.core.component.KoinComponent
 
 
-class FavoritesViewModel(var movieRespository: MovieRepository): ViewModel(), KoinComponent {
-    fun getFavoriteMovies(): SharedFlow<MutableList<MovieItemViewState>>{
+class FavoritesViewModel(var movieRespository: MovieRepository) : ViewModel(), KoinComponent {
+    fun getFavoriteMovies(): SharedFlow<List<MovieItemViewState>> {
         return movieRespository.loadFavoriteMovies()
     }
 

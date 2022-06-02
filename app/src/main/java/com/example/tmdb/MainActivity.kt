@@ -15,6 +15,8 @@ import com.example.tmdb.screens.Screen
 import com.example.tmdb.screens.StartScreen
 import com.example.tmdb.screens.StartScreenTab
 import com.example.tmdb.ui.theme.TmdbTheme
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.compose.get
 import org.koin.core.context.startKoin
 
@@ -22,7 +24,18 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         startKoin {
-            modules( FavoritesModule, homeModule, DetailsModule, favoriteDatabaseModule, repositoryModule, apiModule, httpClientModule )
+            androidLogger()
+            androidContext(this@MainActivity)
+            modules(
+                FavoritesModule,
+                homeModule,
+                DetailsModule,
+                favoriteDatabaseModule,
+                repositoryModule,
+                apiModule,
+                httpClientModule,
+                databaseModule
+            )
         }
         setContent {
             TmdbTheme {
@@ -30,15 +43,21 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    when(currentScreen){
+                    when (currentScreen) {
 
                         is Screen.StartScreen -> {
                             val tab: StartScreenTab = (currentScreen as Screen.StartScreen).tab
-                            StartScreen(mainScreenTab= tab)
+                            StartScreen(mainScreenTab = tab)
                         }
                         is Screen.Details -> {
                             val movieId: Int = (currentScreen as Screen.Details).movieId
-                            DetailsScreen(movieId=movieId , viewModel = (DetailsViewModel(movieRespository = get(), movieId = movieId)))
+                            DetailsScreen(
+                                movieId = movieId,
+                                viewModel = (DetailsViewModel(
+                                    movieRespository = get(),
+                                    movieId = movieId
+                                ))
+                            )
                         }
                     }
                 }

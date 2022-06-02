@@ -51,15 +51,14 @@ fun MainMovieList(
 @Composable
 fun MainScreen(
     viewModel: HomeViewModel
-){
-    var popularMovies=viewModel.getPopularMovies().collectAsState(initial = listOf() ).value
-    var nowPlayingMovies=viewModel.getNowPlayingMovies().collectAsState(initial = listOf()).value
-    var upcomingMovies=viewModel.getUpcomingMovies().collectAsState(initial = listOf()).value
-    var topRatedMovies=viewModel.getTopRatedMovies().collectAsState(initial = listOf()).value
+) {
+    var popularMovies = viewModel.getPopularMovies().collectAsState(initial = listOf()).value
+    var nowPlayingMovies = viewModel.getNowPlayingMovies().collectAsState(initial = listOf()).value
+    var upcomingMovies = viewModel.getUpcomingMovies().collectAsState(initial = listOf()).value
+    var topRatedMovies = viewModel.getTopRatedMovies().collectAsState(initial = listOf()).value
 
 
-    //var moviesToShow=MainMovies
-    var movieCategory by remember { mutableStateOf(0)}
+    var movieCategory by remember { mutableStateOf(0) }
     val scaffoldState: ScaffoldState = rememberScaffoldState()
     Scaffold(
         scaffoldState = scaffoldState,
@@ -84,20 +83,19 @@ fun MainScreen(
                 Text(text = stringResource(id = R.string.whatspopular))
                 Spacer(modifier = Modifier.height(5.dp))
                 Row() {
-                    TextButton(onClick = {movieCategory=1}) {
+                    TextButton(onClick = { movieCategory = 1 }) {
                         Text(text = "Popular")
                     }
-                    TextButton(onClick = { movieCategory=2 }) {
+                    TextButton(onClick = { movieCategory = 2 }) {
                         Text(text = "Top rated")
                     }
                 }
             }
-            //var moviesToShow: MutableList<MovieItemViewState> = mutableListOf()
 
-            var moviesToShow=popularMovies
-          when(movieCategory){
-               1->moviesToShow=popularMovies
-                2->moviesToShow=topRatedMovies
+            var moviesToShow = popularMovies
+            when (movieCategory) {
+                1 -> moviesToShow = popularMovies
+                2 -> moviesToShow = topRatedMovies
             }
             item {
                 if (moviesToShow.isNotEmpty()) {
@@ -115,7 +113,7 @@ fun MainScreen(
                 Spacer(modifier = Modifier.height(5.dp))
             }
 
-            var upcomingMovies=upcomingMovies
+            var upcomingMovies = upcomingMovies
             item {
                 if (upcomingMovies.isNotEmpty()) {
                     MainMovieList(
@@ -132,7 +130,7 @@ fun MainScreen(
                 Spacer(modifier = Modifier.height(5.dp))
 
             }
-            var upcomingToWatch=popularMovies
+            var upcomingToWatch = popularMovies
             item {
                 if (upcomingToWatch.isNotEmpty()) {
                     MainMovieList(

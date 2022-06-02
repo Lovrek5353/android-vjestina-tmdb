@@ -1,5 +1,7 @@
 package com.example.tmdb.data
 
+import com.example.tmdb.database.MovieCardEntity
+
 data class MovieItemViewState(
     val id: Int,
     val title: String,
@@ -8,10 +10,18 @@ data class MovieItemViewState(
     var isFavorite: Boolean
 )
 
-fun MovieResponse.toMovieItemViewState(isFavorite: Boolean)=MovieItemViewState(
+fun MovieResponse.toMovieItemViewState(isFavorite: Boolean) = MovieItemViewState(
     id,
     title,
     overview,
     poster_path,
     isFavorite
+)
+
+fun MovieCardEntity.toMovieItemViewState() = MovieItemViewState(
+    id,
+    title,
+    overview,
+    posterPath,
+    favorite
 )

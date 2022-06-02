@@ -55,7 +55,8 @@ fun MovieList(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun FavoritesScreen(viewModel: FavoritesViewModel) {
-    var FavoriteMovies= viewModel.getFavoriteMovies().collectAsState(initial = mutableListOf()).value
+    var FavoriteMovies =
+        viewModel.getFavoriteMovies().collectAsState(initial = mutableListOf()).value
 
     val scaffoldStateMain: ScaffoldState = rememberScaffoldState()
     Scaffold(
@@ -71,24 +72,23 @@ fun FavoritesScreen(viewModel: FavoritesViewModel) {
             Text(text = stringResource(id = R.string.favorites))
             Spacer(modifier = Modifier.height(10.dp))
         }
-        LazyVerticalGrid(   //Kako izbrisati ove crte, kada se klikne na njih dobiva se scafford
+        LazyVerticalGrid(
             cells = GridCells.Adaptive(dimensionResource(id = R.dimen.movie_card_width_main)),
             contentPadding = PaddingValues(20.dp),
-            content ={
-                items(FavoriteMovies){ item->
-                            MovieCard(
-                                modifier = Modifier
-                                    .padding(5.dp),
-                                item=item,
-                                onMovieItemClick = ({ Router.navigateTo(Screen.Details(item.id)) }),
-                            )
+            content = {
+                items(FavoriteMovies) { item ->
+                    MovieCard(
+                        modifier = Modifier
+                            .padding(5.dp),
+                        item = item,
+                        onMovieItemClick = ({ Router.navigateTo(Screen.Details(item.id)) }),
+                    )
                 }
             }
         )
         BackPressHandler(onBackPressed = { Router.navigateTo(Screen.StartScreen(StartScreenTab.HomeTab)) })
     }
 }
-
 
 
 @Preview
