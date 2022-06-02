@@ -12,20 +12,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import coil.compose.rememberAsyncImagePainter
 import com.example.tmdb.R
-import com.example.tmdb.screens.Router
-import com.example.tmdb.screens.Screen
-import com.example.tmdb.ui.theme.FavoriteButton
 import com.example.tmdb.data.MovieItemViewState
+import com.example.tmdb.ui.theme.FavoriteButton
 
 @Composable
 fun MovieCard(
     modifier: Modifier = Modifier,
     onMovieItemClick: () -> Unit = {},
     item: MovieItemViewState,
-    onLikeButtonClick: ()->Unit={}
 ) {
     Box(
         modifier = modifier
@@ -37,25 +33,28 @@ fun MovieCard(
                 width = dimensionResource(id = R.dimen.movie_card_width_main),
                 height = dimensionResource(id = R.dimen.movie_card_height_main),
             )
-
     ) {
+
         Image(
-            painter = painterResource(id = R.drawable.iron_man_1),
+            painter = rememberAsyncImagePainter(model = "https://image.tmdb.org/t/p/w500/${item.poster_path}"),
             contentDescription = null,
             modifier = Modifier
                 .fillMaxSize(),
             contentScale = ContentScale.FillBounds
         )
-        FavoriteButton(
-            modifier = Modifier.padding(
-                start = dimensionResource(id = R.dimen.heart_position),
-                top = dimensionResource(id = R.dimen.heart_position)
+        FavoriteButton(movie = item,
+            modifier = modifier.padding(
+            start = dimensionResource(id = R.dimen.heart_position),
+            top = dimensionResource(id = R.dimen.heart_position)
             )
         )
+
+
     }
 }
 
-@Preview
+
+/*@Preview
 @Composable
 fun MovieCardPreview() {
     MovieCard(
@@ -64,9 +63,10 @@ fun MovieCardPreview() {
             id = 1,
             title = "Iron Man",
             overview = "Overview",
-            imageUrl = "R.drawable.iron_man_1"
+            poster_path = HTTPRoutes.baseImageUrl,
+            isFavorite=false
         ),
-        onMovieItemClick = ({ Router.navigateTo(Screen.Details) })
+        onMovieItemClick = ({ Router.navigateTo(Screen.DetailsScreen(item)) }),
     )
-}
+}*/
 
